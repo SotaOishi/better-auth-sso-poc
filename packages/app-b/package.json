@@ -1,0 +1,21 @@
+{
+  "name": "@better-auth-sso-poc/app-b",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@better-auth-sso-poc/shared": "workspace:*",
+    "@hono/node-server": "1.19.9",
+    "dotenv": "17.2.3",
+    "hono": "4.11.5"
+  },
+  "devDependencies": {
+    "tsx": "4.21.0"
+  }
+}

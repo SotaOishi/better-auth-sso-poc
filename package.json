@@ -1,0 +1,29 @@
+{
+  "name": "better-auth-sso-poc",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm -r --parallel run dev",
+    "dev:idp": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm --filter @better-auth-sso-poc/idp run dev",
+    "dev:app-a": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm --filter @better-auth-sso-poc/app-a run dev",
+    "dev:app-b": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm --filter @better-auth-sso-poc/app-b run dev",
+    "build": "pnpm -r run build",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "pnpm -r run typecheck",
+    "db:generate": "pnpm --filter @better-auth-sso-poc/idp run db:generate",
+    "db:migrate": "pnpm --filter @better-auth-sso-poc/idp run db:migrate",
+    "clean": "pnpm -r run clean && rm -rf node_modules"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.12",
+    "@types/node": "25.0.10",
+    "typescript": "5.9.3"
+  }
+}
