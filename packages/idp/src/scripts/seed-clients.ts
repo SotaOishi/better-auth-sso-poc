@@ -10,7 +10,7 @@ async function seedOAuthClients() {
     const appAClient = await auth.api.adminCreateOAuthClient({
       body: {
         client_name: "App A",
-        redirect_uris: ["https://a.localtest.me:3001/callback"],
+        redirect_uris: ["https://a.localtest.me:3001/api/auth/oauth2/callback/idp"],
       },
     });
     console.log("  Client ID:", appAClient.client_id);
@@ -31,7 +31,7 @@ async function seedOAuthClients() {
     const appBClient = await auth.api.adminCreateOAuthClient({
       body: {
         client_name: "App B",
-        redirect_uris: ["https://b.localtest.me:3002/callback"],
+        redirect_uris: ["https://b.localtest.me:3002/api/auth/oauth2/callback/idp"],
       },
     });
     console.log("  Client ID:", appBClient.client_id);

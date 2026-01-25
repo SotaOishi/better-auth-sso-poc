@@ -1,5 +1,3 @@
-import type { OAuthClientConfig } from "@better-auth-sso-poc/shared";
-
 function requireEnv(name: string): string {
   const value = process.env[name];
   if (!value) {
@@ -16,10 +14,10 @@ export const config = {
   sessionSecret: requireEnv("SESSION_SECRET"),
 };
 
-export const oauthConfig: OAuthClientConfig = {
+export const oauthConfig = {
+  providerId: "idp",
   clientId: requireEnv("APP_A_CLIENT_ID"),
   clientSecret: requireEnv("APP_A_CLIENT_SECRET"),
-  redirectUri: `${config.appUrl}/callback`,
   idpBaseUrl: process.env.IDP_URL || "http://localhost:3000",
   scopes: ["openid", "profile", "email", "offline_access"],
 };

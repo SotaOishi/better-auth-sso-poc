@@ -20,12 +20,12 @@ importers:
 
   packages/app-a:
     dependencies:
-      '@better-auth-sso-poc/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@hono/node-server':
         specifier: 1.19.9
         version: 1.19.9(hono@4.11.5)
+      better-auth:
+        specifier: 1.4.17
+        version: 1.4.17(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(kysely@0.28.10)(postgres@3.4.8))
       dotenv:
         specifier: 17.2.3
         version: 17.2.3
@@ -39,12 +39,12 @@ importers:
 
   packages/app-b:
     dependencies:
-      '@better-auth-sso-poc/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@hono/node-server':
         specifier: 1.19.9
         version: 1.19.9(hono@4.11.5)
+      better-auth:
+        specifier: 1.4.17
+        version: 1.4.17(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(kysely@0.28.10)(postgres@3.4.8))
       dotenv:
         specifier: 17.2.3
         version: 17.2.3
@@ -90,11 +90,7 @@ importers:
         specifier: 4.21.0
         version: 4.21.0
 
-  packages/shared:
-    dependencies:
-      jose:
-        specifier: 6.1.3
-        version: 6.1.3
+  packages/shared: {}
 
 packages:
 

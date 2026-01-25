@@ -27,7 +27,7 @@ better-auth-sso-poc/
 │   ├── idp/          # IdP Server (Better Auth + oauth-provider)
 │   ├── app-a/        # Application A (OAuth Client)
 │   ├── app-b/        # Application B (OAuth Client)
-│   └── shared/       # 共有ユーティリティ (PKCE, OAuth, Session)
+│   └── shared/       # 共有ユーティリティ
 └── ...
 ```
 
@@ -129,20 +129,20 @@ pnpm dev
 |-----|-----|------|
 | App A | https://a.localtest.me:3001 | ホーム (ログイン状態表示) |
 | App A | https://a.localtest.me:3001/login | OAuth認証開始 |
-| App A | https://a.localtest.me:3001/callback | OAuthコールバック |
+| App A | https://a.localtest.me:3001/api/auth/oauth2/callback/idp | OAuthコールバック |
 | App A | https://a.localtest.me:3001/logout | ログアウト |
 | App B | https://b.localtest.me:3002 | ホーム (ログイン状態表示) |
 | App B | https://b.localtest.me:3002/login | OAuth認証開始 |
-| App B | https://b.localtest.me:3002/callback | OAuthコールバック |
+| App B | https://b.localtest.me:3002/api/auth/oauth2/callback/idp | OAuthコールバック |
 | App B | https://b.localtest.me:3002/logout | ログアウト |
 
 
 ### 認証フロー
 
-1. `/login` - PKCE (code_verifier/code_challenge) を生成し、IdPの `/authorize` へリダイレクト
+1. `/login` - Better Authの `signInWithOAuth2` で認可URLを生成し、IdPの `/authorize` へリダイレクト
 2. IdP - ログイン済みならログイン画面をスキップ (SSO)、未ログインならログイン画面を表示
-3. `/callback` - 認可コードを受け取り、IdPの `/token` でトークン交換
-4. ID Tokenからユーザー情報を取得し、アプリ独自のセッションCookieを発行
+3. `/api/auth/oauth2/callback/idp` - Better Authが認可コード交換とユーザー情報取得を実行
+4. Better AuthのセッションCookieを発行し、ホームへリダイレクト
 
 ## 共有パッケージ (packages/shared)
 
@@ -150,12 +150,4 @@ pnpm dev
 
 | 関数 | 説明 |
 |------|------|
-| `generateCodeVerifier()` | PKCE code_verifier生成 |
-| `generateCodeChallenge()` | PKCE code_challenge生成 (S256) |
-| `generateState()` | CSRF対策用state生成 |
-| `generateNonce()` | リプレイ攻撃対策用nonce生成 |
-| `buildAuthorizationUrl(config, state, codeChallenge, nonce)` | 認可URLを構築 |
-| `exchangeCodeForTokens()` | 認可コードをトークンに交換 |
-| `verifyAndDecodeIdToken()` | ID Tokenの署名検証・クレーム検証 |
-| `encodeSessionCookie()` | セッションをCookieにエンコード |
-| `decodeSessionCookie()` | Cookieからセッションをデコード |
+| `escapeHtml()` | HTMLエスケープ |

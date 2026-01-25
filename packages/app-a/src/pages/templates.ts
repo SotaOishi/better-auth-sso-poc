@@ -1,4 +1,8 @@
-import type { UserInfo } from "@better-auth-sso-poc/shared";
+type AuthUser = {
+  id: string;
+  name?: string;
+  email?: string;
+};
 
 const styles = `
   body {
@@ -97,11 +101,11 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#039;");
 }
 
-export function renderHomePage(appName: string, user: UserInfo | null, error?: string): string {
+export function renderHomePage(appName: string, user: AuthUser | null, error?: string): string {
   const userSection = user
     ? `
       <div class="user-info">
-        <p><strong>ユーザーID:</strong> ${escapeHtml(user.sub)}</p>
+        <p><strong>ユーザーID:</strong> ${escapeHtml(user.id)}</p>
         ${user.name ? `<p><strong>名前:</strong> ${escapeHtml(user.name)}</p>` : ""}
         ${user.email ? `<p><strong>メール:</strong> ${escapeHtml(user.email)}</p>` : ""}
       </div>

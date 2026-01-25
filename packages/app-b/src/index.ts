@@ -5,8 +5,8 @@ import path from "node:path";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
+import { auth } from "./auth.js";
 import { APP_NAME, config } from "./config.js";
-import { callbackRoutes } from "./routes/callback.js";
 import { homeRoutes } from "./routes/home.js";
 import { loginRoutes } from "./routes/login.js";
 import { logoutRoutes } from "./routes/logout.js";
@@ -16,9 +16,11 @@ const app = new Hono();
 app.use("*", logger());
 
 // ルート定義
+app.on(["POST", "GET"], "/api/auth/*", (c) => {
+  return auth.handler(c.req.raw);
+});
 app.route("/", homeRoutes);
 app.route("/", loginRoutes);
-app.route("/", callbackRoutes);
 app.route("/", logoutRoutes);
 
 // サーバー起動

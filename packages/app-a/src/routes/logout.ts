@@ -1,12 +1,22 @@
-import { SESSION_COOKIE_NAME } from "@better-auth-sso-poc/shared";
 import { Hono } from "hono";
-import { deleteCookie } from "hono/cookie";
+import { auth } from "../auth.js";
 
 const logoutRoutes = new Hono();
 
-logoutRoutes.get("/logout", (c) => {
-  // セッションCookieを削除
-  deleteCookie(c, SESSION_COOKIE_NAME);
+logoutRoutes.get("/logout", async (c) => {
+  try {
+    const response = await auth.api.signOut({
+      headers: c.req.raw.headers,
+      asResponse: true,
+    });
+
+    const cookies = response.headers.getSetCookie();
+    for (const cookie of cookies) {
+      c.header("Set-Cookie", cookie, { append: true });
+    }
+  } catch {
+    // サインアウトのエラーは無視してリダイレクトを続行
+  }
 
   // ホームへリダイレクト
   // 注意: PoCではアプリのセッションのみ削除し、IdPのセッションは残す

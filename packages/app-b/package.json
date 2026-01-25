@@ -10,8 +10,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@better-auth-sso-poc/shared": "workspace:*",
     "@hono/node-server": "1.19.9",
+    "better-auth": "1.4.17",
     "dotenv": "17.2.3",
     "hono": "4.11.5"
   },
