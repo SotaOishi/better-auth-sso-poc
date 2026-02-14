@@ -14,6 +14,9 @@ importers:
       '@playwright/cli':
         specifier: 0.1.0
         version: 0.1.0
+      '@playwright/test':
+        specifier: 1.58.2
+        version: 1.58.2
       '@types/node':
         specifier: 25.2.0
         version: 25.2.0
@@ -654,6 +657,11 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  '@playwright/test@1.58.2':
+    resolution: {integrity: sha512-akea+6bHYBBfA9uQqSYmlJXn61cTa+jbO87xVLCWbTqbWadRVmhxlXATaOjOgcBaWU4ePo0wB41KMFv3o35IXA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -899,8 +907,18 @@ packages:
     resolution: {integrity: sha512-yJBmDJr18xy47dbNVlHcgdPrulSn1nhSE6Ns9vTG+Nx9VPT6iV1MD6aQFp/t52zpf82FhLLTXAXr30NuCnxvwA==}
     engines: {node: ^20.0.0 || >=22.0.0}
 
+  playwright-core@1.58.2:
+    resolution: {integrity: sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   playwright-core@1.59.0-alpha-1770426101000:
     resolution: {integrity: sha512-tkCTC2sL3Nss+rjgtAKhAuWI3l6om6NB2R7RAiKrdX2oEqqYg2WWwL7cRZDerh20ihON6f+pvCC19AoV+NkjUg==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.58.2:
+    resolution: {integrity: sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -1260,6 +1278,10 @@ snapshots:
       minimist: 1.2.8
       playwright: 1.59.0-alpha-1770426101000
 
+  '@playwright/test@1.58.2':
+    dependencies:
+      playwright: 1.58.2
+
   '@standard-schema/spec@1.1.0': {}
 
   '@types/node@25.2.0':
@@ -1429,7 +1451,15 @@ snapshots:
 
   nanostores@1.1.0: {}
 
+  playwright-core@1.58.2: {}
+
   playwright-core@1.59.0-alpha-1770426101000: {}
+
+  playwright@1.58.2:
+    dependencies:
+      playwright-core: 1.58.2
+    optionalDependencies:
+      fsevents: 2.3.2
 
   playwright@1.59.0-alpha-1770426101000:
     dependencies:

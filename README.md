@@ -18,6 +18,8 @@ Better Authで、OAuth 2.1 + OIDC互換のAuthorization Server / OIDC Provider�
 | `pnpm db:generate` | Drizzleマイグレーション生成 |
 | `pnpm db:migrate` | Drizzleマイグレーション実行 |
 | `pnpm clean` | ビルド成果物とnode_modulesを削除 |
+| `pnpm test:e2e` | Playwright E2Eテスト実行 |
+| `pnpm test:e2e:headed` | ブラウザ表示付きでE2Eテスト実行 |
 
 ## プロジェクト構成
 
@@ -95,7 +97,7 @@ pnpm --filter @better-auth-sso-poc/idp run seed
 pnpm dev
 ```
 
-### SSOテスト
+### 手動SSOテスト
 
 1. **App A** (https://a.localtest.me:3001) にアクセス
 2. 「ログイン」をクリック → IdPにリダイレクト
@@ -104,6 +106,29 @@ pnpm dev
 5. **App B** (https://b.localtest.me:3002) にアクセス
 6. 「ログイン」をクリック → IdPにリダイレクト
 7. **IdPのログイン画面が表示されずに自動ログイン = SSO成功**
+
+### E2Eテスト
+
+Playwrightを使ったE2Eテストで、SSOフローを自動検証できます。
+
+```bash
+# 全サービスが起動した状態でテスト実行
+pnpm test:e2e
+
+# ブラウザ表示付きで実行（デバッグ用）
+pnpm test:e2e:headed
+```
+
+テストシナリオ:
+
+| テスト | 内容 |
+|--------|------|
+| 基本ログインフロー | App A → IdPログイン → 同意 → App A認証完了 |
+| SSOクロスアプリ | App Aログイン後、App BでIdPログイン画面スキップで自動認証 |
+| アプリレベルログアウト | App Aログアウト後もApp Bセッション維持、IdPセッションで再ログイン可能 |
+| IdPレベルログアウト | IdPログアウト後、再ログイン時に認証情報の入力が必要 |
+
+> **Note**: テスト初回実行時にグローバルセットアップでテストユーザーが自動作成されます。サーバーが起動していない場合は `webServer` 設定によりローカル/CIともに自動起動されます。すでに `pnpm dev` で起動済みの場合は既存サーバーを再利用します。
 
 ## IdP
 

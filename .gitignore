@@ -142,3 +142,7 @@ vite.config.ts.timestamp-*
 certs/
 docs/plans
 docs/reviews
+
+# Playwright
+test-results/
+playwright-report/

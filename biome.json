@@ -11,6 +11,14 @@
     "lineWidth": 100
   },
   "files": {
-    "includes": ["**", "!**/node_modules", "!**/dist", "!**/.git", "!**/.claude"]
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/.git",
+      "!**/.claude",
+      "!test-results",
+      "!playwright-report"
+    ]
   }
 }
