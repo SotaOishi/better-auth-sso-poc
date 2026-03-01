@@ -128,6 +128,7 @@ export const oauthRefreshToken = pgTable("oauth_refresh_token", {
   expiresAt: timestamp("expires_at"),
   createdAt: timestamp("created_at"),
   revoked: timestamp("revoked"),
+  authTime: timestamp("auth_time"),
   scopes: text("scopes").array().notNull(),
 });
 
