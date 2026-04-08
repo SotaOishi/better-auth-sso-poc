@@ -16,7 +16,7 @@
     "@better-auth-sso-poc/shared": "workspace:*",
     "@better-auth/drizzle-adapter": "1.5.4",
     "@better-auth/oauth-provider": "1.5.4",
-    "@hono/node-server": "1.19.11",
+    "@hono/node-server": "1.19.13",
     "better-auth": "1.5.4",
     "dotenv": "17.3.1",
     "drizzle-orm": "0.45.1",
