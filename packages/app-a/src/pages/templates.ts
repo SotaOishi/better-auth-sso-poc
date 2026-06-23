@@ -1,3 +1,5 @@
+import { escapeHtml, renderHtmlDocument } from "@better-auth-sso-poc/shared";
+
 type AuthUser = {
   id: string;
   name?: string;
@@ -92,15 +94,6 @@ const styles = `
   }
 `;
 
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
 export function renderHomePage(appName: string, user: AuthUser | null, error?: string): string {
   const userSection = user
     ? `
@@ -124,16 +117,10 @@ export function renderHomePage(appName: string, user: AuthUser | null, error?: s
       </div>
     `;
 
-  return `
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${escapeHtml(appName)}</title>
-      <style>${styles}</style>
-    </head>
-    <body>
+  return renderHtmlDocument({
+    title: appName,
+    styles,
+    body: `
       <div class="card">
         <span class="app-badge">${escapeHtml(appName)}</span>
         <h1>${user ? "ログイン済み" : "ようこそ"}</h1>
@@ -141,29 +128,21 @@ export function renderHomePage(appName: string, user: AuthUser | null, error?: s
         ${userSection}
         ${ssoHint}
       </div>
-    </body>
-    </html>
-  `;
+    `,
+  });
 }
 
 export function renderErrorPage(appName: string, error: string): string {
-  return `
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>エラー - ${escapeHtml(appName)}</title>
-      <style>${styles}</style>
-    </head>
-    <body>
+  return renderHtmlDocument({
+    title: `エラー - ${appName}`,
+    styles,
+    body: `
       <div class="card">
         <span class="app-badge">${escapeHtml(appName)}</span>
         <h1>エラー</h1>
         <div class="error">${escapeHtml(error)}</div>
         <a href="/" class="btn btn-primary">ホームに戻る</a>
       </div>
-    </body>
-    </html>
-  `;
+    `,
+  });
 }

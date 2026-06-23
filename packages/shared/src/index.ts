@@ -1,1 +1,1 @@
-export { escapeHtml } from "./html.js";
+export { escapeHtml, renderHtmlDocument } from "./html.js";

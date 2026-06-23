@@ -26,6 +26,9 @@ importers:
 
   packages/app-a:
     dependencies:
+      '@better-auth-sso-poc/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@hono/node-server':
         specifier: 1.19.11
         version: 1.19.11(hono@4.12.5)
@@ -45,6 +48,9 @@ importers:
 
   packages/app-b:
     dependencies:
+      '@better-auth-sso-poc/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@hono/node-server':
         specifier: 1.19.11
         version: 1.19.11(hono@4.12.5)
