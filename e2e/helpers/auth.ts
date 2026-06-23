@@ -20,6 +20,14 @@ export async function approveConsent(page: Page) {
 }
 
 /**
+ * 同意ページで「拒否」ボタンをクリックする
+ */
+export async function denyConsent(page: Page) {
+  await expect(page.locator("h1")).toContainText("アクセス許可");
+  await page.click("button.deny");
+}
+
+/**
  * ユーザーが認証済み状態であることを検証する
  */
 export async function assertAuthenticated(page: Page) {

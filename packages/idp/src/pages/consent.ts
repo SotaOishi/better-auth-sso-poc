@@ -116,7 +116,6 @@ export function renderConsentPage(c: Context, options: ConsentPageOptions) {
           </div>
 
           <form method="POST" action="/consent">
-            <input type="hidden" name="accept" value="true" />
             <input type="hidden" name="csrf_token" value="${escapeHtml(csrfToken)}" />
             <input type="hidden" name="scope" value="${escapeHtml(scope)}" />
             <input type="hidden" name="oauth_query" value="${escapeHtml(oauthQuery)}" />
@@ -124,8 +123,8 @@ export function renderConsentPage(c: Context, options: ConsentPageOptions) {
             <input type="hidden" name="redirect_uri" value="${escapeHtml(redirectUri)}" />
             <input type="hidden" name="state" value="${escapeHtml(state)}" />
             <div class="buttons">
-              <button type="button" class="deny" onclick="window.history.back()">拒否</button>
-              <button type="submit" class="allow">許可</button>
+              <button type="submit" name="accept" value="false" class="deny">拒否</button>
+              <button type="submit" name="accept" value="true" class="allow">許可</button>
             </div>
           </form>
         </div>
