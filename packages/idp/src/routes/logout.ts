@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { auth } from "../auth.js";
+import { redirectSafely } from "../lib/redirect.js";
 import type { IdpEnv } from "../types.js";
 
 const logoutRoutes = new Hono<IdpEnv>();
@@ -23,7 +24,7 @@ logoutRoutes.get("/logout", async (c) => {
   }
 
   if (redirectUrl) {
-    return c.redirect(redirectUrl);
+    return redirectSafely(c, redirectUrl);
   }
   return c.redirect("/");
 });

@@ -1,8 +1,10 @@
 import { defineConfig } from "@playwright/test";
 
 const IDP_URL = process.env.E2E_IDP_URL ?? process.env.IDP_URL ?? "https://auth.localtest.me:3000";
-const APP_A_URL = process.env.E2E_APP_A_URL ?? process.env.APP_A_URL ?? "https://a.localtest.me:3001";
-const APP_B_URL = process.env.E2E_APP_B_URL ?? process.env.APP_B_URL ?? "https://b.localtest.me:3002";
+const APP_A_URL =
+  process.env.E2E_APP_A_URL ?? process.env.APP_A_URL ?? "https://a.localtest.me:3001";
+const APP_B_URL =
+  process.env.E2E_APP_B_URL ?? process.env.APP_B_URL ?? "https://b.localtest.me:3002";
 const trimTrailingSlash = (url: string) => url.replace(/\/$/, "");
 
 export default defineConfig({

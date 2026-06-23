@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { auth } from "../auth.js";
 import { buildAuthPageUrl, buildOauthAuthorizeUrl } from "../lib/helpers.js";
+import { redirectSafely } from "../lib/redirect.js";
 import { issueCsrfToken, validateCsrfToken } from "../lib/security.js";
 import { renderSignupPage } from "../pages/signup.js";
 import type { IdpEnv } from "../types.js";
@@ -51,7 +52,7 @@ signupRoutes.post("/signup", async (c) => {
 
     // OAuthフローまたはログインページへリダイレクト
     if (redirectUrl) {
-      return c.redirect(redirectUrl);
+      return redirectSafely(c, redirectUrl);
     }
     if (oauthAuthorizeUrl) {
       return c.redirect(oauthAuthorizeUrl);

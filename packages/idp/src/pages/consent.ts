@@ -120,6 +120,7 @@ export function renderConsentPage(c: Context, options: ConsentPageOptions) {
             <input type="hidden" name="csrf_token" value="${escapeHtml(csrfToken)}" />
             <input type="hidden" name="scope" value="${escapeHtml(scope)}" />
             <input type="hidden" name="oauth_query" value="${escapeHtml(oauthQuery)}" />
+            <input type="hidden" name="client_id" value="${escapeHtml(clientId)}" />
             <input type="hidden" name="redirect_uri" value="${escapeHtml(redirectUri)}" />
             <input type="hidden" name="state" value="${escapeHtml(state)}" />
             <div class="buttons">

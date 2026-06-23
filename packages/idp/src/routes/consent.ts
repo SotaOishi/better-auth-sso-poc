@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { auth } from "../auth.js";
+import { buildOAuthErrorRedirectUrl } from "../lib/redirect.js";
 import { issueCsrfToken, validateCsrfToken } from "../lib/security.js";
 import { renderConsentPage } from "../pages/consent.js";
 import type { IdpEnv } from "../types.js";
@@ -17,27 +18,38 @@ consentRoutes.post("/consent", async (c) => {
   const scope = formData.get("scope") as string;
   const oauthQuery = formData.get("oauth_query") as string;
   const redirectUri = formData.get("redirect_uri") as string;
-  const state = formData.get("state") as string;
+  const oauthParams = new URLSearchParams(oauthQuery);
+  const clientId = (formData.get("client_id") as string | null) ?? oauthParams.get("client_id");
+  const state = ((formData.get("state") as string | null) ?? oauthParams.get("state")) || "";
   const csrfToken = (formData.get("csrf_token") as string | null) ?? null;
 
   if (!validateCsrfToken(c, csrfToken)) {
-    if (redirectUri) {
-      const errorUrl = new URL(redirectUri);
-      errorUrl.searchParams.set("error", "access_denied");
-      errorUrl.searchParams.set("error_description", "CSRF validation failed");
-      if (state) errorUrl.searchParams.set("state", state);
-      return c.redirect(errorUrl.toString());
+    const errorRedirectUrl = await buildOAuthErrorRedirectUrl({
+      clientId,
+      redirectUri,
+      state,
+      error: "access_denied",
+      errorDescription: "CSRF validation failed",
+    });
+    if (errorRedirectUrl) {
+      return c.redirect(errorRedirectUrl);
     }
     return c.text("Invalid CSRF token", 400);
   }
 
   if (!accept) {
     // ユーザーが拒否した場合はエラー付きでクライアントへリダイレクト
-    const errorUrl = new URL(redirectUri);
-    errorUrl.searchParams.set("error", "access_denied");
-    errorUrl.searchParams.set("error_description", "User denied the request");
-    if (state) errorUrl.searchParams.set("state", state);
-    return c.redirect(errorUrl.toString());
+    const errorRedirectUrl = await buildOAuthErrorRedirectUrl({
+      clientId,
+      redirectUri,
+      state,
+      error: "access_denied",
+      errorDescription: "User denied the request",
+    });
+    if (errorRedirectUrl) {
+      return c.redirect(errorRedirectUrl);
+    }
+    return c.text("Invalid OAuth redirect_uri", 400);
   }
 
   // 同意内容をJSONでBetter Auth APIへ転送

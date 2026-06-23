@@ -40,9 +40,11 @@ const idpUrl =
   process.env.IDP_URL ??
   `${defaultProtocol}://${defaultIdpHost}:${port}`;
 const appAUrl =
-  process.env.APP_A_URL ?? `${defaultProtocol}://${defaultAppAHost}:${process.env.APP_A_PORT ?? 3001}`;
+  process.env.APP_A_URL ??
+  `${defaultProtocol}://${defaultAppAHost}:${process.env.APP_A_PORT ?? 3001}`;
 const appBUrl =
-  process.env.APP_B_URL ?? `${defaultProtocol}://${defaultAppBHost}:${process.env.APP_B_PORT ?? 3002}`;
+  process.env.APP_B_URL ??
+  `${defaultProtocol}://${defaultAppBHost}:${process.env.APP_B_PORT ?? 3002}`;
 
 const configuredCorsOrigins = parseList(process.env.IDP_CORS_ORIGINS);
 
@@ -55,7 +57,15 @@ export const idpConfig = {
     appB: ensureTrailingSlash(appBUrl),
   },
   corsOrigins:
-    configuredCorsOrigins.length > 0 ? configuredCorsOrigins : [originOf(appAUrl), originOf(appBUrl)],
+    configuredCorsOrigins.length > 0
+      ? configuredCorsOrigins
+      : [originOf(appAUrl), originOf(appBUrl)],
+  redirectAllowedOrigins: [
+    originOf(idpUrl),
+    originOf(appAUrl),
+    originOf(appBUrl),
+    ...parseList(process.env.IDP_REDIRECT_ALLOWED_ORIGINS),
+  ],
   oauthRedirectUris: {
     appA: new URL("/api/auth/oauth2/callback/idp", ensureTrailingSlash(appAUrl)).toString(),
     appB: new URL("/api/auth/oauth2/callback/idp", ensureTrailingSlash(appBUrl)).toString(),
