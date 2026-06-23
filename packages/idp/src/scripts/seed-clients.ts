@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { auth } from "../auth";
+import { auth } from "../auth.js";
 
 async function seedOAuthClients() {
   console.log("Seeding OAuth clients...\n");
