@@ -60,16 +60,28 @@ pnpm install
 ### 環境変数の設定
 
 ```bash
-# ルートの .env
+# ルートの .env（全体の参照用）
 cp .env.example .env
 
-# 各アプリの .env
+# 実行時に各 package の cwd で読み込まれる .env
 cp packages/idp/.env.example packages/idp/.env
 cp packages/app-a/.env.example packages/app-a/.env
 cp packages/app-b/.env.example packages/app-b/.env
 ```
 
-`.env` を編集（`SESSION_SECRET` は各アプリで別々の値を設定）
+`.env` を編集（`SESSION_SECRET` は各アプリで別々の値を設定）。
+
+主な URL / port 設定:
+
+| 変数 | 説明 |
+|------|------|
+| `PORT` | IdP の待受 port（既定: `3000`） |
+| `BETTER_AUTH_URL` / `IDP_URL` | IdP の外部 URL（既定: `https://auth.localtest.me:3000`） |
+| `APP_A_URL` / `APP_B_URL` | OAuth redirect URI、CORS、E2E の基準になる App URL |
+| `IDP_CORS_ORIGINS` | IdP の `/api/auth/*` が許可する origin（カンマ区切り） |
+| `E2E_IDP_URL` / `E2E_APP_A_URL` / `E2E_APP_B_URL` | E2E 実行時だけ URL を上書きしたい場合の任意設定 |
+
+> **Note**: `pnpm dev:idp` などの package script は各 package ディレクトリで実行されるため、実行時の正本は `packages/*/.env` です。ルート `.env` は設定の控えや E2E の上書き用として利用してください。
 
 ### データベースの準備
 
@@ -87,7 +99,9 @@ pnpm db:migrate
 pnpm --filter @better-auth-sso-poc/idp run seed
 ```
 
-出力されるClient IDとClient Secretを`.env`に設定。
+seed script は `APP_A_URL` / `APP_B_URL` から OAuth callback URL（`/api/auth/oauth2/callback/idp`）を生成します。
+
+出力される Client ID と Client Secret を `packages/app-a/.env` / `packages/app-b/.env` に設定。
 
 ## 動作確認
 

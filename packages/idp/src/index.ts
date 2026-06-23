@@ -7,6 +7,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { auth } from "./auth.js";
+import { idpConfig } from "./config.js";
 import { consentRoutes } from "./routes/consent.js";
 import { healthRoutes } from "./routes/health.js";
 import { homeRoutes } from "./routes/home.js";
@@ -21,15 +22,10 @@ const app = new Hono<IdpEnv>();
 
 app.use("*", logger());
 
-const corsOrigins =
-  process.env.USE_HTTPS === "true"
-    ? ["https://a.localtest.me:3001", "https://b.localtest.me:3002"]
-    : ["http://localhost:3001", "http://localhost:3002"];
-
 app.use(
   "/api/auth/*",
   cors({
-    origin: corsOrigins,
+    origin: idpConfig.corsOrigins,
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS"],
     credentials: true,
@@ -57,8 +53,7 @@ app.route("/", healthRoutes);
 app.route("/", oauthRoutes);
 
 // サーバー起動
-const port = Number(process.env.PORT) || 3000;
-const useHttps = process.env.USE_HTTPS === "true";
+const { port, useHttps } = idpConfig;
 
 if (useHttps) {
   const certsDir = path.join(process.cwd(), "..", "..", "certs");
@@ -71,8 +66,8 @@ if (useHttps) {
       cert: fs.readFileSync(path.join(certsDir, "localtest.me-cert.pem")),
     },
   });
-  console.log(`IdP Server starting on https://auth.localtest.me:${port}`);
+  console.log(`IdP Server starting on ${idpConfig.baseUrl.replace(/\/$/, "")}`);
 } else {
   serve({ fetch: app.fetch, port });
-  console.log(`IdP Server starting on http://localhost:${port}`);
+  console.log(`IdP Server starting on ${idpConfig.baseUrl.replace(/\/$/, "")}`);
 }

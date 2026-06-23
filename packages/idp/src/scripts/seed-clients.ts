@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { auth } from "../auth.js";
+import { idpConfig } from "../config.js";
 
 async function seedOAuthClients() {
   console.log("Seeding OAuth clients...\n");
@@ -10,7 +11,7 @@ async function seedOAuthClients() {
     const appAClient = await auth.api.adminCreateOAuthClient({
       body: {
         client_name: "App A",
-        redirect_uris: ["https://a.localtest.me:3001/api/auth/oauth2/callback/idp"],
+        redirect_uris: [idpConfig.oauthRedirectUris.appA],
       },
     });
     console.log("  Client ID:", appAClient.client_id);
@@ -31,7 +32,7 @@ async function seedOAuthClients() {
     const appBClient = await auth.api.adminCreateOAuthClient({
       body: {
         client_name: "App B",
-        redirect_uris: ["https://b.localtest.me:3002/api/auth/oauth2/callback/idp"],
+        redirect_uris: [idpConfig.oauthRedirectUris.appB],
       },
     });
     console.log("  Client ID:", appBClient.client_id);
