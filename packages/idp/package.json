@@ -10,6 +10,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "seed": "tsx src/scripts/seed-clients.ts",
+    "seed:orgs": "tsx src/scripts/seed-organizations.ts",
     "clean": "rm -rf dist"
   },
   "dependencies": {

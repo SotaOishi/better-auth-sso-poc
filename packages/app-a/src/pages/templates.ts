@@ -1,7 +1,16 @@
+type OrganizationMembership = {
+  id: string;
+  slug: string;
+  name: string;
+  role: string;
+};
+
 type AuthUser = {
   id: string;
   name?: string;
   email?: string;
+  organizations?: OrganizationMembership[];
+  activeOrganizationId?: string;
 };
 
 const styles = `
@@ -90,6 +99,66 @@ const styles = `
     font-size: 13px;
     color: #6b7280;
   }
+  .orgs {
+    margin-bottom: 20px;
+  }
+  .orgs-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    margin: 0 0 8px;
+  }
+  .orgs-empty {
+    font-size: 14px;
+    color: #9ca3af;
+  }
+  .org-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .org-item.org-active {
+    border-color: #0070f3;
+    background: #eff6ff;
+  }
+  .org-label {
+    font-size: 14px;
+    color: #111827;
+  }
+  .org-role {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    background: #f3f4f6;
+    color: #374151;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .org-current {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0070f3;
+  }
+  .org-form {
+    display: inline;
+    margin: 0;
+  }
+  .org-switch {
+    background: none;
+    border: none;
+    color: #0070f3;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+  }
+  .org-switch:hover {
+    text-decoration: underline;
+  }
 `;
 
 function escapeHtml(str: string): string {
@@ -101,6 +170,43 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#039;");
 }
 
+function renderOrganizations(
+  organizations: OrganizationMembership[],
+  activeOrganizationId?: string,
+): string {
+  if (organizations.length === 0) {
+    return `<div class="orgs"><p class="orgs-title">所属組織</p><p class="orgs-empty">所属組織はありません</p></div>`;
+  }
+
+  const items = organizations
+    .map((org) => {
+      const isActive = org.id === activeOrganizationId;
+      const action = isActive
+        ? `<span class="org-current">現在</span>`
+        : `<form method="post" action="/active-organization" class="org-form">
+            <input type="hidden" name="organizationId" value="${escapeHtml(org.id)}">
+            <button type="submit" class="org-switch">これにする</button>
+          </form>`;
+      return `
+        <div class="org-item${isActive ? " org-active" : ""}">
+          <span class="org-label">
+            ${escapeHtml(org.name)}
+            <span class="org-role">${escapeHtml(org.role)}</span>
+          </span>
+          ${action}
+        </div>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="orgs">
+      <p class="orgs-title">所属組織</p>
+      ${items}
+    </div>
+  `;
+}
+
 export function renderHomePage(appName: string, user: AuthUser | null, error?: string): string {
   const userSection = user
     ? `
@@ -109,6 +215,7 @@ export function renderHomePage(appName: string, user: AuthUser | null, error?: s
         ${user.name ? `<p><strong>名前:</strong> ${escapeHtml(user.name)}</p>` : ""}
         ${user.email ? `<p><strong>メール:</strong> ${escapeHtml(user.email)}</p>` : ""}
       </div>
+      ${renderOrganizations(user.organizations ?? [], user.activeOrganizationId)}
       <a href="/logout" class="btn btn-secondary">ログアウト</a>
     `
     : `

@@ -19,5 +19,5 @@ export const oauthConfig = {
   clientId: requireEnv("APP_B_CLIENT_ID"),
   clientSecret: requireEnv("APP_B_CLIENT_SECRET"),
   idpBaseUrl: process.env.IDP_URL || "http://localhost:3000",
-  scopes: ["openid", "profile", "email", "offline_access"],
+  scopes: ["openid", "profile", "email", "offline_access", "organizations"],
 };
