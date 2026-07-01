@@ -1,5 +1,12 @@
+import { execFile } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { chromium, type FullConfig, type Page } from "@playwright/test";
 import { TEST_USER, URLS } from "./constants.js";
+
+const execFileAsync = promisify(execFile);
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 function isUserAlreadyExistsError(errorMessage: string | null): boolean {
   if (!errorMessage) {
@@ -34,12 +41,26 @@ async function ensureTestUser(page: Page) {
   }
 }
 
+async function seedOrganizationTestData() {
+  try {
+    await execFileAsync("pnpm", ["seed:orgs"], {
+      cwd: repoRoot,
+      env: process.env,
+      timeout: 60_000,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to prepare E2E organization seed data: ${message}`);
+  }
+}
+
 async function globalSetup(_config: FullConfig) {
   const browser = await chromium.launch();
   const context = await browser.newContext({ ignoreHTTPSErrors: true });
   const page = await context.newPage();
 
   try {
+    await seedOrganizationTestData();
     await ensureTestUser(page);
 
     // IdP からログアウトしてクリーン状態にする

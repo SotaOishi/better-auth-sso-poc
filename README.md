@@ -17,6 +17,7 @@ Better Authで、OAuth 2.1 + OIDC互換のAuthorization Server / OIDC Provider�
 | `pnpm typecheck` | TypeScript型チェック |
 | `pnpm db:generate` | Drizzleマイグレーション生成 |
 | `pnpm db:migrate` | Drizzleマイグレーション実行 |
+| `pnpm seed:orgs` | E2E/手動確認用の組織・所属データを投入 |
 | `pnpm clean` | ビルド成果物とnode_modulesを削除 |
 | `pnpm test:e2e` | Playwright E2Eテスト実行 |
 | `pnpm test:e2e:headed` | ブラウザ表示付きでE2Eテスト実行 |
@@ -89,6 +90,46 @@ pnpm --filter @better-auth-sso-poc/idp run seed
 
 出力されるClient IDとClient Secretを`.env`に設定。
 
+### 組織データの投入（任意）
+
+Organization claim の手動確認では、以下でサンプル組織・所属データを投入できます。
+
+```bash
+pnpm seed:orgs
+```
+
+投入されるユーザー:
+
+| ユーザー | パスワード | 所属 |
+|---------|------------|------|
+| `alice@example.com` | `password1234` | Acme(owner) / Globex(admin) / Initech(member) |
+| `bob@example.com` | `password1234` | Acme(member) |
+
+> **Note**: `pnpm test:e2e` 実行時は Playwright の global setup がこの組織seedを自動実行します。手動確認する場合のみ上記コマンドを実行してください。
+
+## OpenSpec ワークフロー
+
+このリポジトリは `.claude/commands/opsx/*`、`.claude/skills/openspec-*`、`openspec/` により OpenSpec ベースの仕様駆動ワークフローを導入しています。
+
+### OpenSpec CLI のインストール
+
+OPSX コマンドや OpenSpec artifact を操作するには OpenSpec CLI が必要です。
+
+```bash
+pnpm install -g @fission-ai/openspec@latest
+openspec --version
+```
+
+### 主なコマンド
+
+| コマンド | 説明 |
+|---------|------|
+| `/opsx:explore` | 実装前の探索・調査 |
+| `/opsx:propose <change>` | 変更提案・設計・タスクの作成 |
+| `/opsx:apply <change>` | タスクに沿って実装 |
+| `/opsx:sync <change>` | delta spec を `openspec/specs/` に同期 |
+| `/opsx:archive <change>` | 完了した変更を archive へ移動 |
+
 ## 動作確認
 
 ### 全サービス起動
@@ -129,6 +170,7 @@ pnpm test:e2e:headed
 | IdPレベルログアウト | IdPログアウト後、再ログイン時に認証情報の入力が必要 |
 
 > **Note**: テスト初回実行時にグローバルセットアップでテストユーザーが自動作成されます。サーバーが起動していない場合は `webServer` 設定によりローカル/CIともに自動起動されます。すでに `pnpm dev` で起動済みの場合は既存サーバーを再利用します。
+> Organization claim テストに必要な組織seedもグローバルセットアップで自動投入されます。
 
 ## IdP
 

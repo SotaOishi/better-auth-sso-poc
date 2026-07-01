@@ -9,7 +9,7 @@ const activeOrganizationRoutes = new Hono();
 activeOrganizationRoutes.post("/active-organization", async (c) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
   if (!session?.user) {
-    return c.redirect("/?error=" + encodeURIComponent("ログインが必要です"));
+    return c.redirect(`/?error=${encodeURIComponent("ログインが必要です")}`);
   }
 
   const body = await c.req.parseBody();
@@ -28,7 +28,7 @@ activeOrganizationRoutes.post("/active-organization", async (c) => {
   // スナップショットに含まれない組織IDは拒否する。
   const isMember = organizations.some((org) => org.id === organizationId);
   if (!isMember) {
-    return c.redirect("/?error=" + encodeURIComponent("選択された組織には所属していません"));
+    return c.redirect(`/?error=${encodeURIComponent("選択された組織には所属していません")}`);
   }
 
   const response = await auth.api.updateUser({
