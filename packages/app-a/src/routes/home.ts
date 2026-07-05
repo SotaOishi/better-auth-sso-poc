@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import type { OrganizationMembership } from "../auth.js";
 import { auth } from "../auth.js";
 import { APP_NAME } from "../config.js";
 import { renderHomePage } from "../pages/templates.js";
@@ -9,13 +10,28 @@ homeRoutes.get("/", async (c) => {
   const error = c.req.query("error");
 
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
-  const user = session?.user
-    ? {
-        id: session.user.id,
-        name: session.user.name ?? undefined,
-        email: session.user.email ?? undefined,
+
+  let user = null;
+  if (session?.user) {
+    const raw = (session.user as { organizations?: string | null }).organizations;
+    let organizations: OrganizationMembership[] = [];
+    if (raw) {
+      try {
+        organizations = JSON.parse(raw) as OrganizationMembership[];
+      } catch {
+        organizations = [];
       }
-    : null;
+    }
+    user = {
+      id: session.user.id,
+      name: session.user.name ?? undefined,
+      email: session.user.email ?? undefined,
+      organizations,
+      activeOrganizationId:
+        (session.user as { activeOrganizationId?: string | null }).activeOrganizationId ??
+        undefined,
+    };
+  }
 
   return c.html(renderHomePage(APP_NAME, user, error));
 });

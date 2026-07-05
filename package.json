@@ -15,6 +15,7 @@
     "typecheck": "pnpm -r run typecheck",
     "db:generate": "pnpm --filter @better-auth-sso-poc/idp run db:generate",
     "db:migrate": "pnpm --filter @better-auth-sso-poc/idp run db:migrate",
+    "seed:orgs": "pnpm --filter @better-auth-sso-poc/idp run seed:orgs",
     "clean": "pnpm -r run clean && rm -rf node_modules",
     "test:e2e": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" playwright test --config=e2e/playwright.config.ts",
     "test:e2e:headed": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" playwright test --config=e2e/playwright.config.ts --headed"

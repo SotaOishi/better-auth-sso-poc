@@ -7,6 +7,7 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { auth } from "./auth.js";
 import { APP_NAME, config } from "./config.js";
+import { activeOrganizationRoutes } from "./routes/active-organization.js";
 import { homeRoutes } from "./routes/home.js";
 import { loginRoutes } from "./routes/login.js";
 import { logoutRoutes } from "./routes/logout.js";
@@ -22,6 +23,7 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 app.route("/", homeRoutes);
 app.route("/", loginRoutes);
 app.route("/", logoutRoutes);
+app.route("/", activeOrganizationRoutes);
 
 // サーバー起動
 const useHttps = process.env.USE_HTTPS === "true";
