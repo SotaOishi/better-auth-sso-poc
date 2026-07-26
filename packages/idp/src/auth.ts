@@ -3,8 +3,8 @@ import { oauthProvider } from "@better-auth/oauth-provider";
 import { betterAuth } from "better-auth";
 import { jwt, organization } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
-import { db } from "./db";
-import { member, organization as organizationTable } from "./db/schema";
+import { db } from "./db/index.js";
+import { member, organization as organizationTable } from "./db/schema.js";
 
 if (!process.env.BETTER_AUTH_SECRET) {
   throw new Error("BETTER_AUTH_SECRET is not set");
@@ -43,6 +43,8 @@ export const auth = betterAuth({
       refreshTokenExpiresIn: 60 * 60 * 24 * 30, // リフレッシュトークンの期限（30日）
       codeExpiresIn: 60 * 10, // 認可コードの期限（10分）
       scopes: ["openid", "profile", "email", "offline_access", "organizations"],
+      // RFC 8414 の issuer path 対応エンドポイントは well-known.ts で公開する。
+      silenceWarnings: { oauthAuthServerConfig: true },
       // organizationsスコープが付与されたときのみ、userinfoに所属組織一覧を含める。
       // activeOrganizationIdには依存せず、user.idから直接メンバーシップを解決する。
       customUserInfoClaims: async ({ user, scopes }) => {

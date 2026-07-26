@@ -80,6 +80,12 @@ export const auth = betterAuth({
           clientSecret: oauthConfig.clientSecret,
           scopes: oauthConfig.scopes,
           pkce: true,
+          accountSubject: ({ profile }) => {
+            if (profile.id == null || profile.id === "") {
+              throw new Error('IdP userinfo response did not include a valid "id"');
+            }
+            return profile.id;
+          },
           // 毎ログイン時にuserinfo（organizations含む）でユーザーを更新する
           overrideUserInfo: true,
           getUserInfo: async (tokens) => {

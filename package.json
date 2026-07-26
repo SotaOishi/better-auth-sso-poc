@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm -r --parallel run dev",
+    "dev": "sh scripts/dev.sh",
     "dev:idp": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm --filter @better-auth-sso-poc/idp run dev",
     "dev:app-a": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm --filter @better-auth-sso-poc/app-a run dev",
     "dev:app-b": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" pnpm --filter @better-auth-sso-poc/app-b run dev",
@@ -23,13 +23,15 @@
   "license": "MIT",
   "packageManager": "pnpm@10.28.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.6",
-    "@playwright/cli": "0.1.1",
-    "@playwright/test": "1.58.2",
-    "@types/node": "25.3.5",
-    "typescript": "5.9.3"
+    "@biomejs/biome": "2.5.5",
+    "@playwright/cli": "0.1.17",
+    "@playwright/test": "1.62.0",
+    "@types/node": "24.13.3",
+    "concurrently": "9.2.1",
+    "typescript": "7.0.2",
+    "wait-on": "9.1.0"
   }
 }

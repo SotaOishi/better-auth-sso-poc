@@ -8,11 +8,11 @@ const loginRoutes = new Hono();
 
 loginRoutes.get("/login", async (c) => {
   try {
-    const response = await auth.api.signInWithOAuth2({
+    const response = await auth.api.signInSocial({
       headers: c.req.raw.headers,
       asResponse: true,
       body: {
-        providerId: oauthConfig.providerId,
+        provider: oauthConfig.providerId,
         callbackURL: "/",
         errorCallbackURL: "/",
       },

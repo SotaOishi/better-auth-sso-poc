@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { and, eq } from "drizzle-orm";
-import { auth } from "../auth";
-import { db } from "../db";
-import { member, organization, user } from "../db/schema";
+import { auth } from "../auth.js";
+import { db } from "../db/index.js";
+import { member, organization, user } from "../db/schema.js";
 
 type SeedUser = { name: string; email: string; password: string };
 

@@ -14,9 +14,11 @@ wellKnownRoutes.get("/openid-configuration", async (c) => {
   return handler(c.req.raw);
 });
 
+const authServerMetadataHandler = oauthProviderAuthServerMetadata(auth);
+
 // OAuth 2.1 Authorization Server Metadata（RFC 8414）
-// GET /.well-known/oauth-authorization-server を返す
-wellKnownRoutes.get("/oauth-authorization-server", async (c) => {
-  const handler = oauthProviderAuthServerMetadata(auth);
-  return handler(c.req.raw);
-});
+// issuer path（/api/auth）を含む正規URLと従来のルートURLの両方を提供する。
+wellKnownRoutes.get("/oauth-authorization-server/api/auth", (c) =>
+  authServerMetadataHandler(c.req.raw),
+);
+wellKnownRoutes.get("/oauth-authorization-server", (c) => authServerMetadataHandler(c.req.raw));

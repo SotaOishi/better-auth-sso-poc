@@ -2,11 +2,13 @@
 
 Better Authで、OAuth 2.1 + OIDC互換のAuthorization Server / OIDC Provider（IdP）を構築し、複数アプリ間SSOを実現するPoC
 
+> **Dependency note**: Better Auth `1.7.0-rc.2` は、1.7系を先行検証するため意図的に採用しています。正式版への更新時はスキーマ差分を再生成し、マイグレーションとE2Eテストを再検証します。
+
 ## スクリプト
 
 | コマンド | 説明 |
 |---------|------|
-| `pnpm dev` | 全アプリを並列起動 |
+| `pnpm dev` | IdPの準備完了後、App A/Bを並列起動 |
 | `pnpm dev:idp` | IdPサーバーのみ起動 (https://auth.localtest.me:3000) |
 | `pnpm dev:app-a` | App Aのみ起動 (https://a.localtest.me:3001) |
 | `pnpm dev:app-b` | App Bのみ起動 (https://b.localtest.me:3002) |
@@ -35,6 +37,7 @@ better-auth-sso-poc/
 ```
 
 ## 事前インストール
+- Node.js 24.x
 - pnpm
 - mkcert
 - postgresql
@@ -196,19 +199,19 @@ pnpm test:e2e:headed
 |-----|-----|------|
 | App A | https://a.localtest.me:3001 | ホーム (ログイン状態表示) |
 | App A | https://a.localtest.me:3001/login | OAuth認証開始 |
-| App A | https://a.localtest.me:3001/api/auth/oauth2/callback/idp | OAuthコールバック |
+| App A | https://a.localtest.me:3001/api/auth/callback/idp | OAuthコールバック |
 | App A | https://a.localtest.me:3001/logout | ログアウト |
 | App B | https://b.localtest.me:3002 | ホーム (ログイン状態表示) |
 | App B | https://b.localtest.me:3002/login | OAuth認証開始 |
-| App B | https://b.localtest.me:3002/api/auth/oauth2/callback/idp | OAuthコールバック |
+| App B | https://b.localtest.me:3002/api/auth/callback/idp | OAuthコールバック |
 | App B | https://b.localtest.me:3002/logout | ログアウト |
 
 
 ### 認証フロー
 
-1. `/login` - Better Authの `signInWithOAuth2` で認可URLを生成し、IdPの `/authorize` へリダイレクト
+1. `/login` - Better Authの `signInSocial` で認可URLを生成し、IdPの `/authorize` へリダイレクト
 2. IdP - ログイン済みならログイン画面をスキップ (SSO)、未ログインならログイン画面を表示
-3. `/api/auth/oauth2/callback/idp` - Better Authが認可コード交換とユーザー情報取得を実行
+3. `/api/auth/callback/idp` - Better Authが認可コード交換とユーザー情報取得を実行
 4. Better AuthのセッションCookieを発行し、ホームへリダイレクト
 
 ## 共有パッケージ (packages/shared)

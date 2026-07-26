@@ -22,6 +22,27 @@
       "when": 1782539585732,
       "tag": "0002_rainy_gorgon",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784995528102,
+      "tag": "0003_add-account-issuer-binding",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1784995690556,
+      "tag": "0004_update-oauth-provider-schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1785032730299,
+      "tag": "0005_migrate-oauth-callback-uris",
+      "breakpoints": true
     }
   ]
 }
